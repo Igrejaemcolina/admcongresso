@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="Painel administrativo de consulta dos pagamentos do Congresso de Mulheres — IGC.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <title>Congresso de Mulheres — IGC | Painel ADM</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./assets/styles.css">
+  <script type="module" src="./assets/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Ir para o conteúdo</a>
+  <main id="main">
+    <section id="login" class="entry" aria-labelledby="login-title">
+      <div class="entry-brand"><span class="brand-mark" aria-hidden="true">IGC</span><span>CONGRESSO DE MULHERES</span></div>
+      <div class="login-card">
+        <span class="eyebrow">ACESSO ADMINISTRATIVO</span>
+        <h1 id="login-title">Congresso de<br>Mulheres <span class="title-igc">— IGC</span></h1>
+        <p class="subtitle">Painel de consulta dos pagamentos</p>
+        <div class="entry-divider"></div>
+        <p>Entre com seu ID para acompanhar os pagamentos do congresso.</p>
+        <form id="login-form">
+          <label for="access-id">ID de acesso</label>
+          <div class="password-field">
+            <input id="access-id" name="access-id" type="password" autocomplete="off" autocapitalize="none" spellcheck="false" required aria-describedby="id-help login-message">
+            <button id="toggle-password" class="password-toggle" type="button" aria-controls="access-id" aria-pressed="false" aria-label="Mostrar ID de acesso">Mostrar</button>
+          </div>
+          <p id="id-help" class="hint">Informe os quatro números e a inicial do seu nome.</p>
+          <p id="login-message" class="message error" role="alert" aria-atomic="true"></p>
+          <button id="enter" class="button primary enter" type="submit">Entrar <span aria-hidden="true">→</span></button>
+        </form>
+        <p class="privacy-note"><span aria-hidden="true">◈</span> Acesso restrito à administração.<br>Consulta de pagamentos, sem alterações.</p>
+      </div>
+      <p class="entry-footer">Congresso de Mulheres — IGC</p>
+    </section>
+
+    <section id="dashboard" class="dashboard" hidden aria-labelledby="dashboard-title">
+      <header class="topbar">
+        <div class="brand"><span class="brand-mark" aria-hidden="true">IGC</span><span>Congresso de Mulheres <span class="brand-suffix">— IGC</span></span></div>
+        <span class="restricted">◈ Acesso restrito</span>
+      </header>
+      <div class="dashboard-content">
+        <div class="heading-row">
+          <div><span class="eyebrow">PAINEL ADMINISTRATIVO</span><h1 id="dashboard-title" tabindex="-1">Visão geral dos pagamentos</h1><p class="welcome">Administrador(a): <strong id="administrator"></strong></p></div>
+          <div class="header-actions"><button id="refresh" class="button secondary" type="button">↻ Atualizar</button><button id="logout" class="button plain" type="button">Sair <span aria-hidden="true">↗</span></button></div>
+        </div>
+        <p id="dashboard-message" class="message" role="status" aria-live="polite" aria-atomic="true"></p>
+        <section class="overview" aria-label="Resumo de todo o grupo">
+          <div class="metric"><span class="metric-label">Participantes</span><strong id="total-participants"></strong><span class="metric-description">No grupo do congresso</span></div>
+          <div class="metric"><span class="metric-label">Total previsto</span><strong id="total-expected"></strong><span class="metric-description">Valor total do grupo</span></div>
+          <div class="metric received"><span class="metric-label">Total recebido</span><strong id="total-received"></strong><span class="metric-description">Pagamentos realizados</span></div>
+          <div class="metric"><span class="metric-label">Total a receber</span><strong id="total-outstanding"></strong><span class="metric-description">Saldo do grupo</span></div>
+          <div class="metric progress-metric"><label for="collection-progress" class="metric-label">Percentual arrecadado</label><strong id="total-percent"></strong><progress id="collection-progress" max="100" value="0"></progress></div>
+        </section>
+        <div class="consultation-row"><p id="consulted-at"></p><span>Atualize para consultar novos pagamentos.</span></div>
+        <section class="participants-section" aria-labelledby="participants-title">
+          <div class="list-heading"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2 id="participants-title">Pagamentos das participantes</h2></div><span class="readonly">Somente consulta</span></div>
+          <div class="tools">
+            <div class="search-field"><label for="search">Buscar participante</label><input id="search" type="search" placeholder="Digite um nome…" autocomplete="off"></div>
+            <fieldset class="filters"><legend>Situação do pagamento</legend><div class="filter-buttons"><button type="button" data-filter="all" aria-pressed="true">Todas</button><button type="button" data-filter="pending" aria-pressed="false">Com pendências</button><button type="button" data-filter="paid" aria-pressed="false">Quitadas</button></div></fieldset>
+          </div>
+          <p id="result-count" class="result-count" role="status" aria-live="polite" aria-atomic="true"></p>
+          <div id="participant-list"></div>
+          <div id="empty" class="empty" hidden><span aria-hidden="true">⌕</span><h3>Nenhuma participante encontrada</h3><p id="empty-help">Tente outro nome ou escolha o filtro Todas.</p><button id="clear-filters" class="button secondary" type="button">Limpar busca e filtros</button></div>
+        </section>
+        <footer class="dashboard-footer"><span>Congresso de Mulheres — IGC</span><span>Dados referentes à consulta indicada acima.</span></footer>
+      </div>
+    </section>
+  </main>
+  <dialog id="installment-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description">
+    <div class="dialog-header"><span class="eyebrow">DETALHES DO PAGAMENTO</span><button id="close-dialog" class="button secondary" type="button" autofocus>Fechar <span aria-hidden="true">×</span></button></div>
+    <h2 id="dialog-title"></h2><p id="dialog-description">Parcelas em ordem de referência. Os links de comprovante abrem em nova aba.</p>
+    <p id="dialog-last" class="last-installment"></p><div id="installments"></div>
+  </dialog>
+  <noscript>Ative o JavaScript no navegador para consultar os pagamentos.</noscript>
+</body>
+</html>
