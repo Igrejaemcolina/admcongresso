@@ -8,6 +8,31 @@ const count = value => numeric(value) && Number.isInteger(value);
 const nonempty = value => typeof value === 'string' && value.trim().length > 0;
 const require = condition => { if (!condition) throw new ContractError(); };
 
+export const INSTALLMENT_REFERENCES = Object.freeze(['11/2026', '12/2026', '01/2027', '02/2027', '03/2027', '04/2027']);
+export const INSTALLMENT_VALUE = 100;
+export function installmentLabel(reference) {
+  const [month, year] = reference.split('/').map(Number);
+  return new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(Date.UTC(year, month - 1, 1)));
+}
+
+// Aceita Unix em segundos ou milissegundos, sempre como número absoluto.
+export const sessionExpiresAt = value => value < 1e12 ? value * 1000 : value;
+export function validateLogin(data) {
+  require(record(data) && data.ok === true && nonempty(data.token) && nonempty(data.administrador));
+  require(numeric(data.expiraEm) && Number.isSafeInteger(data.expiraEm) && sessionExpiresAt(data.expiraEm) > Date.now());
+  return data;
+}
+
+export function validatePayment(data, participantId, reference) {
+  require(record(data) && data.ok === true && nonempty(data.mensagem) && nonempty(data.administrador));
+  require(record(data.participante) && data.participante.id === participantId && nonempty(data.participante.nome));
+  const item = data.parcela;
+  require(record(item) && item.referencia === reference && item.pago === true && item.valor === INSTALLMENT_VALUE);
+  require(nonempty(item.data) && paymentDate(item.data) !== 'Data não informada em formato reconhecido');
+  require(typeof data.historicoRegistrado === 'boolean');
+  return data;
+}
+
 export function normalizeId(value) { return value.trim().toLowerCase(); }
 export function normalizeSearch(value) { return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR'); }
 export const currency = value => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
@@ -81,5 +106,5 @@ export function validateResponse(data) {
 
 export function filterParticipants(people, search, filter) {
   const query = normalizeSearch(search.trim());
-  return people.filter(person => normalizeSearch(person.nome).includes(query) && (filter === 'all' || (filter === 'paid' ? person.situacao === 'Quitada' : person.situacao === 'Com pendências')));
+  return people.filter(person => (normalizeSearch(person.nome).includes(query) || normalizeSearch(person.id).includes(query)) && (filter === 'all' || (filter === 'paid' ? person.situacao === 'Quitada' : person.situacao === 'Com pendências')));
 }
