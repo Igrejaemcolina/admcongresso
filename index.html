@@ -32,7 +32,7 @@
           <p id="login-message" class="message error" role="alert" aria-atomic="true"></p>
           <button id="enter" class="button primary enter" type="submit">Entrar <span aria-hidden="true">→</span></button>
         </form>
-        <p class="privacy-note"><span aria-hidden="true">◈</span> Acesso restrito à administração.<br>Consulta de pagamentos, sem alterações.</p>
+        <p class="privacy-note"><span aria-hidden="true">◈</span> Acesso restrito à administração.<br>Registro de pagamentos com confirmação.</p>
       </div>
       <p class="entry-footer">Congresso de Mulheres — IGC</p>
     </section>
@@ -57,9 +57,9 @@
         </section>
         <div class="consultation-row"><p id="consulted-at"></p><span>Atualize para consultar novos pagamentos.</span></div>
         <section class="participants-section" aria-labelledby="participants-title">
-          <div class="list-heading"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2 id="participants-title">Pagamentos das participantes</h2></div><span class="readonly">Somente consulta</span></div>
+          <div class="list-heading"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2 id="participants-title">Pagamentos das participantes</h2></div><span class="readonly">Consulta e registro</span></div>
           <div class="tools">
-            <div class="search-field"><label for="search">Buscar participante</label><input id="search" type="search" placeholder="Digite um nome…" autocomplete="off"></div>
+            <div class="search-field"><label for="search">Buscar participante</label><input id="search" type="search" placeholder="Digite um nome ou ID…" autocomplete="off"></div>
             <fieldset class="filters"><legend>Situação do pagamento</legend><div class="filter-buttons"><button type="button" data-filter="all" aria-pressed="true">Todas</button><button type="button" data-filter="pending" aria-pressed="false">Com pendências</button><button type="button" data-filter="paid" aria-pressed="false">Quitadas</button></div></fieldset>
           </div>
           <p id="result-count" class="result-count" role="status" aria-live="polite" aria-atomic="true"></p>
@@ -73,7 +73,20 @@
   <dialog id="installment-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description">
     <div class="dialog-header"><span class="eyebrow">DETALHES DO PAGAMENTO</span><button id="close-dialog" class="button secondary" type="button" autofocus>Fechar <span aria-hidden="true">×</span></button></div>
     <h2 id="dialog-title"></h2><p id="dialog-description">Parcelas em ordem de referência. Os links de comprovante abrem em nova aba.</p>
-    <p id="dialog-last" class="last-installment"></p><div id="installments"></div>
+    <p id="dialog-last" class="last-installment"></p>
+    <p id="installment-message" class="message" role="status" aria-live="polite" aria-atomic="true"></p><div id="installments"></div>
+  </dialog>
+  <dialog id="payment-dialog" aria-labelledby="payment-title" aria-describedby="payment-description">
+    <h2 id="payment-title">Confirmar pagamento</h2>
+    <p id="payment-description">Confira os dados antes de registrar esta parcela como paga.</p>
+    <dl class="payment-summary">
+      <div><dt>Participante</dt><dd id="payment-person"></dd></div>
+      <div><dt>ID da participante</dt><dd id="payment-id"></dd></div>
+      <div><dt>Mês da parcela</dt><dd id="payment-reference"></dd></div>
+      <div><dt>Valor</dt><dd id="payment-value"></dd></div>
+    </dl>
+    <p id="payment-message" class="message warning" role="alert" aria-atomic="true"></p>
+    <div class="payment-actions"><button id="cancel-payment" class="button secondary" type="button" autofocus>Cancelar</button><button id="confirm-payment" class="button primary" type="button">Confirmar pagamento</button></div>
   </dialog>
   <noscript>Ative o JavaScript no navegador para consultar os pagamentos.</noscript>
 </body>
